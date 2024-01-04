@@ -5,6 +5,7 @@ const catchAsync = require("../utils/catchAsync");
 
 // Validation Schema
 const { validateCampground } = require("../middlewares/ValidationSchemas");
+const { isLoggedIn } = require("../middlewares/isLoggedIn");
 
 router.get(
   "/",
@@ -14,13 +15,14 @@ router.get(
   })
 );
 
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
   res.render("campgrounds/new");
 });
 
 router.post(
   "/",
   validateCampground,
+  isLoggedIn,
   catchAsync(async (req, res) => {
     const campground = new Campground(req.body.campground);
     await campground.save();
@@ -44,6 +46,7 @@ router.get(
 
 router.get(
   "/:id/edit",
+  isLoggedIn,
   catchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id);
     if (!campground) {
@@ -56,6 +59,7 @@ router.get(
 
 router.put(
   "/:id",
+  isLoggedIn,
   validateCampground,
   catchAsync(async (req, res) => {
     const { id } = req.params;
@@ -69,6 +73,7 @@ router.put(
 
 router.delete(
   "/:id",
+  isLoggedIn,
   catchAsync(async (req, res) => {
     const { id } = req.params;
 

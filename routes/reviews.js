@@ -7,10 +7,12 @@ const Review = require("../models/review");
 
 // Validation Schema
 const { validateReview } = require("../middlewares/ValidationSchemas");
+const { isLoggedIn } = require("../middlewares/isLoggedIn");
 
 router.post(
   "/",
   validateReview,
+  isLoggedIn,
   catchAsync(async (req, res) => {
     const campgroundID = req.params.id;
     const campground = await Campground.findById(campgroundID);
@@ -26,6 +28,7 @@ router.post(
 
 router.delete(
   "/:reviewID",
+  isLoggedIn,
   catchAsync(async (req, res) => {
     const { id, reviewID } = req.params;
     await Campground.findByIdAndUpdate(id, {
