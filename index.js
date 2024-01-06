@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -9,6 +13,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const ExpressError = require("./utils/ExpressError");
+const mongoSanitize = require("express-mongo-sanitize");
 
 // models
 const User = require("./models/user");
@@ -38,6 +43,8 @@ const sessionConfig = {
     maxAge: 1000 * 60 * 60 * 27 * 7,
   },
 };
+
+app.use(mongoSanitize());
 app.use(session(sessionConfig));
 // config flash
 app.use(flash());
@@ -86,6 +93,6 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("error", { err });
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("app is listening on http://127.0.0.1:3000");
 });
