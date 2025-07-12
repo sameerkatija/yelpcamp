@@ -75,7 +75,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("I am Working");
+  res.render("home");
 });
 
 app.use("/", usersRoutes);
@@ -93,6 +93,6 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("error", { err });
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(3000, () => {
   console.log("app is listening on http://127.0.0.1:3000");
 });
